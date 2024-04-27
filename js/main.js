@@ -51,83 +51,83 @@ const productos = [
         },
         precio: 1000
     },
-    // Camisetas
+    // camisas
     {
         id: "camiseta-01",
-        titulo: "Camiseta 01",
+        titulo: "camisa 01",
         imagen: "./img/camisetas/01.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-02",
-        titulo: "Camiseta 02",
+        titulo: "camisa 02",
         imagen: "./img/camisetas/02.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-03",
-        titulo: "Camiseta 03",
+        titulo: "camisa 03",
         imagen: "./img/camisetas/03.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-04",
-        titulo: "Camiseta 04",
+        titulo: "camisa 04",
         imagen: "./img/camisetas/04.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-05",
-        titulo: "Camiseta 05",
+        titulo: "camisa 05",
         imagen: "./img/camisetas/05.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-06",
-        titulo: "Camiseta 06",
+        titulo: "camisa 06",
         imagen: "./img/camisetas/06.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-07",
-        titulo: "Camiseta 07",
+        titulo: "camisa 07",
         imagen: "./img/camisetas/07.jpg",
         categoria: {
-            nombre: "Camisetas",
-            id: "camisetas"
+            nombre: "Camisas",
+            id: "camisas"
         },
         precio: 1000
     },
     {
         id: "camiseta-08",
-        titulo: "Camiseta 08",
+        titulo: "camisa 08",
         imagen: "./img/camisetas/08.jpg",
         categoria: {
-            nombre: "Camisetas",
+            nombre: "Camisas",
             id: "camisetas"
         },
         precio: 1000
@@ -186,10 +186,17 @@ const productos = [
 ];
 
 const contenedorProductos = document.querySelector("#contenedor-productos");
+const botonesCategorias = document.querySelectorAll(".boton-categoria");
+const tituloPrincipal = document.getElementById("titulo-principal");
+let botonesAgregar = document.querySelectorAll(".producto-agregar");
+const numerito = document.querySelector("#numerito")
 
-function cargarProductos(){
 
-    productos.forEach(producto => {
+function cargarProductos(buscarProductos){
+
+    contenedorProductos.innerHTML = ""
+
+    buscarProductos.forEach(producto => {
 
         const div = document.createElement("div");
         div.classList.add("producto");
@@ -201,5 +208,66 @@ function cargarProductos(){
             <button class="producto-agregar" id="${producto.id}">Agregar</button>
         </div>
         `
+        contenedorProductos.append(div);
     })
+    actualizarBotonesAgregar()
+}
+cargarProductos(productos)
+
+botonesCategorias.forEach(boton =>{
+    boton.addEventListener("click", (e) => {
+
+        botonesCategorias.forEach(boton => boton.classList.remove("active"));
+
+        e.currentTarget.classList.add("active");
+
+        if (e.currentTarget.id != "todos") {
+            const productosCategoria = productos.find(producto => producto.categoria.id === e.currentTarget.id);
+            tituloPrincipal.innerText = productosCategoria.categoria.nombre;
+
+            const productosBoton = productos.filter(producto => producto.categoria.id === e.currentTarget.id)
+            cargarProductos(productosBoton)
+        }else{
+            tituloPrincipal.innerText = "Todos los productos"
+            cargarProductos(productos)
+        }
+    })
+})
+
+function actualizarBotonesAgregar() {
+    botonesAgregar = document.querySelectorAll(".producto-agregar");
+
+    botonesAgregar.forEach(boton => {
+        boton.addEventListener("click", agregarAlCarrito);
+    })
+}
+let productosEnCarrito
+
+const productosEnCarritoLs = localStorage.getItem("productos-en-carrito")
+
+if (productosEnCarritoLs) {
+    productosEnCarrito = JSON.parse(productosEnCarritoLs)
+    actualizarNumerito()
+}else{
+    productosEnCarrito = []
+}
+
+function agregarAlCarrito(e) {
+    const idBoton = e.currentTarget.id
+    const productoAgregado = productos.find((producto) => producto.id === idBoton)
+        
+        if (productosEnCarrito.some(producto => producto.id === idBoton)) {
+            const index = productosEnCarrito.findIndex(producto=> producto.id === idBoton)
+            productosEnCarrito[index].cantidad ++
+        }else{
+            productoAgregado.cantidad = 1
+            productosEnCarrito.push(productoAgregado)
+        }
+        actualizarNumerito()
+
+        localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito))
+}
+function actualizarNumerito(){
+    let nuevoNumerito = productosEnCarrito.reduce((acc, producto) => acc + producto.cantidad,0)
+    numerito.innerText = nuevoNumerito
 }
