@@ -190,6 +190,7 @@ const botonesCategorias = document.querySelectorAll(".boton-categoria");
 const tituloPrincipal = document.getElementById("titulo-principal");
 let botonesAgregar = document.querySelectorAll(".producto-agregar");
 const numerito = document.querySelector("#numerito")
+console.log(botonesAgregar[0]);
 
 
 function cargarProductos(buscarProductos){

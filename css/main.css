@@ -24,6 +24,7 @@ a {
     text-decoration: none;
 }
 .wrapper{
+    /* min-width: 750px; */
     display: grid;
     grid-template-columns: 1fr 4fr;
     background-color: var(--clr-main);
@@ -187,6 +188,7 @@ main{
     font-size: .75rem;
 }
 .carrito-producto-eliminar{
+    font-size: 1rem;
     border: 0;
     background-color: transparent;
     color: var(--clr-red);
@@ -230,5 +232,8 @@ main{
     border-bottom-right-radius: 1rem;
 }
 .disabled{
+    display: none;
+}
+.header-mobile{
     display: none;
 }
